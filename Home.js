@@ -10,14 +10,51 @@ const Home = () => {
     setEnteredData(e.target.value);
   };
 
-  // Function to handle the "Send" button click
-  const handleSendClick = () => {
+// Function to handle the "Send" button click
+const handleSendClick = () => {
     // Log the entered data
     console.log('Entered data:', enteredData);
-
+    if(enteredData.length > 0){
+        fetchData(enteredData);
+    }
     // Clear the textarea after processing
     setEnteredData('');
-  };
+    };
+
+  async function fetchData(enteredData) {
+    const url = 'https://neutrinoapi-bad-word-filter.p.rapidapi.com/bad-word-filter';
+    const options = {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'X-RapidAPI-Key': '8dc9c1d272msh91e6ef9d5046f47p195507jsn7bc0ee65d8f6',
+            'X-RapidAPI-Host': 'neutrinoapi-bad-word-filter.p.rapidapi.com'
+        },
+        body: new URLSearchParams({
+            content: enteredData
+        })
+    };
+
+    try {
+        const response = await fetch(url, options);
+        if( response.status!==200){
+            console.log("Error");
+        }
+        else{
+            const result = await response.text();
+            const jsonObject = JSON.parse(result);
+            const isBadValue = jsonObject['is-bad'];
+            console.log(isBadValue);
+            alert(isBadValue);
+           
+        }
+      
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 
   return (
     <div className="home">
@@ -39,7 +76,5 @@ const Home = () => {
     </div>
   );
 };
-
-
 
 export default Home;
