@@ -4,22 +4,40 @@ import './App.css';
 const Home = () => {
   // State to store the entered data
   const [enteredData, setEnteredData] = useState('');
-
+  const [pop, setPopData] = useState('');
   // Function to handle textarea changes
   const handleTextareaChange = (e) => {
     setEnteredData(e.target.value);
   };
 
-// Function to handle the "Send" button click
 const handleSendClick = () => {
     // Log the entered data
     console.log('Entered data:', enteredData);
     if(enteredData.length > 0){
-        fetchData(enteredData);
+        fetchData(enteredData)
+            .then(isBadValue => {
+                console.log(isBadValue);
+                // Handle isBadValue here
+                if (isBadValue) {
+                    // Show popup or perform other actions
+                    console.log('Bad words detected!');
+                    setPopData('Bad words detected!')
+                } else {
+                    // Show popup or perform other actions
+                    console.log('Text is clean');
+                    setPopData('Text is clean')
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                // Handle error
+            });
     }
     // Clear the textarea after processing
     setEnteredData('');
-    };
+    setPopData('');
+};
+
 
   async function fetchData(enteredData) {
     const url = 'https://neutrinoapi-bad-word-filter.p.rapidapi.com/bad-word-filter';
@@ -44,8 +62,10 @@ const handleSendClick = () => {
             const result = await response.text();
             const jsonObject = JSON.parse(result);
             const isBadValue = jsonObject['is-bad'];
-            console.log(isBadValue);
-            alert(isBadValue);
+            
+            return isBadValue;
+            
+            // alert(isBadValue);
            
         }
       
@@ -68,11 +88,17 @@ const handleSendClick = () => {
             onChange={handleTextareaChange}
           ></textarea>
           <br />
-          <button className="btn" onClick={handleSendClick}>
+          <button id="send" className="btn" onClick={handleSendClick}>
             Send
           </button>
         </form>
+
       </div>
+      {/* <div className="popup" onClick={myFunction}>
+        <span className="popuptext" id="myPopup">hi u...</span>
+     </div> */}
+     <p> {pop}</p>
+
     </div>
   );
 };
