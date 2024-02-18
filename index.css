@@ -5,7 +5,24 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f3fdf4;
+ 
+}
+.col-1 {
+  width: 40%;
+  float: left; /* Float the image container to the left */
+  height: 100%;
+  background-color: white;
+}
+
+.col-2 {
+  width: 60%;
+  max-height: 100%;
+  float: left; /* Float the content container to the left */
+  background-color: #d2e7f3;
+}
+
+html, body, #root, .App {
+  height: 100vh;
 }
 
 code {
